@@ -74,11 +74,12 @@ def train_model(model_defs, input_arg, map_cstr=None, chkpt_file='./chkpt'):
         best_sol = chkpt["best_sol"]
         best_runtime, best_throughput, best_energy, best_area, best_l1_size, best_l2_size, best_mac, best_power, best_num_pe = env.get_indiv_info(best_sol, num_pe=None)
         print("Mapping:", chkpt["best_sol"])
-        print(f"Reward: {chkpt['best_reward'][0]:.3e}, Runtime: {best_runtime:.0f}(cycles), Area: {best_area/1e6:.3f}(mm2), PE Area_ratio: {best_num_pe*MAC_AREA_INT8/best_area*100:.1f}%, Num_PE: {best_num_pe:.0f}, L1 Buffer: {best_l1_size:.0f}(elements), L2 Buffer: {best_l2_size:.0f}(elements)")
+        print(f"Reward: {chkpt['best_reward'][0]:.3e}, Runtime: {best_runtime:.0f}(cycles), Energy: {best_energy}(nJ), Area: {best_area/1e6:.3f}(mm2), PE Area_ratio: {best_num_pe*MAC_AREA_INT8/best_area*100:.1f}%, Num_PE: {best_num_pe:.0f}, L1 Buffer: {best_l1_size:.0f}(elements), L2 Buffer: {best_l2_size:.0f}(elements)")
         chkpt = {
             "reward":chkpt['best_reward'][0],
             "best_sol":best_sol,
             "runtime":best_runtime,
+            "energy":best_energy,
             "area":best_area,
             "pe_area_ratio":best_num_pe*MAC_AREA_INT8/best_area,
             "PE":best_num_pe,
@@ -89,7 +90,7 @@ def train_model(model_defs, input_arg, map_cstr=None, chkpt_file='./chkpt'):
             "L2_size": best_l2_size
         }
         chkpt_list.append(chkpt)
-    columns = ["runtime", "area", "pe_area_ratio", "PE", "L1_size", "L2_size", "PE_area", "L1_area", "L2_area","best_sol"]
+    columns = ["runtime", "energy", "area", "pe_area_ratio", "PE", "L1_size", "L2_size", "PE_area", "L1_area", "L2_area","best_sol"]
     np_array = None
     for chkpt in chkpt_list:
         if np_array is None:
